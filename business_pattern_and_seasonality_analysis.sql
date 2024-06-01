@@ -1,10 +1,10 @@
 -- 1. Finding out monthly revenue for each products, their margin and the total revenue and total orders.
 
 SELECT 
-		YEAR(created_at) AS yr,
+	YEAR(created_at) AS yr,
         MONTH(created_at) AS mth,
         SUM(CASE WHEN product_id = 1 THEN price_usd ELSE NULL END) AS 'p1_revenue',
-		SUM(CASE WHEN product_id = 2 THEN price_usd ELSE NULL END) AS 'p2_revenue',
+	SUM(CASE WHEN product_id = 2 THEN price_usd ELSE NULL END) AS 'p2_revenue',
         SUM(CASE WHEN product_id = 3 THEN price_usd ELSE NULL END) AS 'p3_revenue',
         SUM(CASE WHEN product_id = 4 THEN price_usd ELSE NULL END) AS 'p4_revenue',
         SUM(CASE WHEN product_id = 1 THEN price_usd ELSE NULL END) - 
@@ -33,14 +33,14 @@ SELECT
  -- 2. Finding out monthly session-to-order conversion rate, revenue per order and revenue per session
 
 SELECT
-		YEAR(t1.created_at) AS yr,
+	YEAR(t1.created_at) AS yr,
         QUARTER(t1.created_at) AS qtr,
         COUNT(DISTINCT orders.order_id)/COUNT(DISTINCT t1.website_session_id) AS conversion_rate,
         SUM(orders.price_usd)/COUNT(DISTINCT orders.order_id) AS revenue_per_order,
-		SUM(orders.price_usd)/COUNT(DISTINCT t1.website_session_id) AS revenue_per_session
+	SUM(orders.price_usd)/COUNT(DISTINCT t1.website_session_id) AS revenue_per_session
 FROM website_sessions AS t1
-		LEFT JOIN orders 
-			ON orders.website_session_id = t1.website_session_id
+	LEFT JOIN orders 
+		ON orders.website_session_id = t1.website_session_id
 GROUP BY 1,2;
 
 
@@ -66,7 +66,7 @@ WITH cte AS (
 		GROUP BY 2,3,1
 		ORDER BY 1)
 SELECT 
-		hr,
+	hr,
         ROUND(AVG(sessions), 2) AS hourly_avg,
         ROUND(AVG(CASE WHEN wk_day = 0 THEN sessions ELSE NULL END), 2) AS mon,
         ROUND(AVG(CASE WHEN wk_day = 1 THEN sessions ELSE NULL END), 2) AS tue,
@@ -90,7 +90,7 @@ GROUP BY 1;
 -- 4. Finding monthly number of sales, total revenue and total_margin.
 
 SELECT 
-		YEAR(created_at) AS yr,
+	YEAR(created_at) AS yr,
         MONTH(created_at) AS mth,
         COUNT(DISTINCT order_id) AS number_of_sales,
         SUM(price_usd) AS total_revenue,
@@ -110,20 +110,20 @@ GROUP BY 1,2;
 -- 5. Finding how many of the website visitors come back for another session.
 
 SELECT
-		CASE 
-			when repeated_times = 1 THEN 0
-            when repeated_times = 2 THEN 1
-            when repeated_times = 3 THEN 2
-            when repeated_times = 4 THEN 3
-            ELSE 'check_logic'
-            END AS 'repeated_times',
-            COUNT(DISTINCT user_id) AS users
+	CASE 
+	when repeated_times = 1 THEN 0
+        when repeated_times = 2 THEN 1
+        when repeated_times = 3 THEN 2
+        when repeated_times = 4 THEN 3
+        ELSE 'check_logic'
+        END AS 'repeated_times',
+        COUNT(DISTINCT user_id) AS users
 FROM 
-(SELECT
+	(SELECT
 		user_id,
-        COUNT(DISTINCT website_session_id) AS repeated_times
-FROM website_sessions
-GROUP BY 1) A
+        	COUNT(DISTINCT website_session_id) AS repeated_times
+		FROM website_sessions
+		GROUP BY 1) A
 GROUP BY repeated_times;
 
 
@@ -184,7 +184,7 @@ FROM cte2;
 
 SELECT
 		CASE
-			WHEN is_repeat_session = 0 THEN 'new_customer'
+		WHEN is_repeat_session = 0 THEN 'new_customer'
             WHEN is_repeat_session = 1 THEN 'old_customer'
             ELSE 'check_logic'
             END AS 'customer_type',
