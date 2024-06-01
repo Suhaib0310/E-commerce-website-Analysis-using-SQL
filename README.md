@@ -1,4 +1,4 @@
-Performed complete analysis on e commerce website to get better understanding of the following
+Performed complete analysis on e commerce website to get a better understanding of the following:
 1. Traffice Source
 2. Website Performance
 3. Business Pattern And Seasonality
