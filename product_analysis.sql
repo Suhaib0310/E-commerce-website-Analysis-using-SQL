@@ -20,7 +20,7 @@ WITH cte2 AS (
 					ON order_items.order_id  = cte.order_id
 					AND order_items.is_primary_item = 0)
 SELECT 
-		primary_product_id,
+	primary_product_id,
         COUNT(DISTINCT order_id) AS total_orders,
         COUNT(DISTINCT CASE WHEN secondary_product_id = 1 THEN secondary_order_item_id ELSE NULL END) AS prod1,
         COUNT(DISTINCT CASE WHEN secondary_product_id = 2 THEN secondary_order_item_id ELSE NULL END) prod2,
@@ -75,7 +75,6 @@ WITH cte AS (
 LEFT JOIN orders
 		ON orders.website_session_id = pageview_level.website_session_id
 	GROUP BY 1,2,3,6,7,8)
-
 SELECT 
 		time_period,
         SUM(cart) AS cart,
@@ -208,7 +207,7 @@ GROUP BY 1;
 -- 5. determining monthly refund rate by product.
 
 SELECT
-		YEAR(order_items.created_at) AS yr,
+	YEAR(order_items.created_at) AS yr,
         MONTH(order_items.created_at) AS mth,
         COUNT(DISTINCT CASE WHEN product_id = 1 AND order_item_refund_id IS NOT NULL THEN order_item_refund_id ELSE NULL END )/
         COUNT(DISTINCT CASE WHEN product_id = 1 THEN order_items.order_item_id ELSE NULL END)AS prod_1_refund_rate,
@@ -218,7 +217,7 @@ SELECT
         COUNT(DISTINCT CASE WHEN product_id = 3 THEN order_items.order_item_id ELSE NULL END)AS prod_3_refund_rate,
         COUNT(DISTINCT CASE WHEN product_id = 4 AND order_item_refund_id IS NOT NULL THEN order_item_refund_id ELSE NULL END )/
         COUNT(DISTINCT CASE WHEN product_id = 4 THEN order_items.order_item_id ELSE NULL END)AS prod_4_refund_rate,
-         COUNT(DISTINCT order_items.order_item_id) AS total_orders,
+        COUNT(DISTINCT order_items.order_item_id) AS total_orders,
         COUNT(DISTINCT order_item_refund_id) AS total_refunds,
         COUNT(DISTINCT order_item_refund_id)/ COUNT(DISTINCT order_items.order_item_id) AS total_refund_rate
 FROM order_items
