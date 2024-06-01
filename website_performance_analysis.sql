@@ -4,7 +4,7 @@
 
 CREATE TEMPORARY TABLE first_pageview
 SELECT 
-		DATE(website_sessions.created_at) AS created_at,
+	DATE(website_sessions.created_at) AS created_at,
         website_sessions.website_session_id,
         MIN(website_pageviews.website_pageview_id),
         pageview_url
@@ -36,7 +36,7 @@ HAVING bounce_session = 1;
 -- Getting the final output, joining the temporary tables to get the count of total sessions and bounce sessions.
 
 SELECT 
-		YEAR(first_pageview.created_at) AS yr,
+	YEAR(first_pageview.created_at) AS yr,
         MONTH(first_pageview.created_at) AS mth,
         COUNT(first_pageview.website_session_id) AS total_session,
         COUNT(bounce_table.website_session_id) AS bounce_session,
@@ -89,27 +89,27 @@ ORDER BY 2 DESC;
 
 CREATE TEMPORARY TABLE pageviews_visited
 	SELECT 
-			website_session_id,
-			MAX(home_page)AS home,
-			MAX(lander_1) AS lander_1,
+		website_session_id,
+		MAX(home_page)AS home,
+		MAX(lander_1) AS lander_1,
             MAX(lander_2) AS lander_2,
             MAX(lander_3) AS lander_3,
             MAX(lander_4) AS lander_4,
             MAX(lander_5) AS lander_5,
-			MAX(product) AS product,
-			MAX(cart) AS cart,
-			MAX(shipping) AS shipping,
-			MAX(billing) AS billing,
-			MAX(thankyou) AS thankyou
+		MAX(product) AS product,
+		MAX(cart) AS cart,
+		MAX(shipping) AS shipping,
+		MAX(billing) AS billing,
+		MAX(thankyou) AS thankyou
 	FROM
 			(SELECT 
 				website_sessions.website_session_id,
 				CASE WHEN pageview_url = '/home' THEN 1 ELSE 0 END AS home_page,
 				CASE WHEN pageview_url = '/lander-1' THEN 1 ELSE 0 END AS lander_1,
-                CASE WHEN pageview_url = '/lander-2' THEN 1 ELSE 0 END AS lander_2,
-                CASE WHEN pageview_url = '/lander-3' THEN 1 ELSE 0 END AS lander_3,
-                CASE WHEN pageview_url = '/lander-4' THEN 1 ELSE 0 END AS lander_4,
-                CASE WHEN pageview_url = '/lander-5' THEN 1 ELSE 0 END AS lander_5,
+                		CASE WHEN pageview_url = '/lander-2' THEN 1 ELSE 0 END AS lander_2,
+                		CASE WHEN pageview_url = '/lander-3' THEN 1 ELSE 0 END AS lander_3,
+                		CASE WHEN pageview_url = '/lander-4' THEN 1 ELSE 0 END AS lander_4,
+                		CASE WHEN pageview_url = '/lander-5' THEN 1 ELSE 0 END AS lander_5,
 				CASE WHEN pageview_url = '/products' THEN 1 ELSE 0 END AS product,
 				CASE WHEN pageview_url = '/cart' THEN 1 ELSE 0 END AS cart,
 				CASE WHEN pageview_url = '/shipping' THEN 1 ELSE 0 END  AS shipping,
@@ -123,12 +123,12 @@ GROUP BY 1;
 
 SELECT 
 		CASE 
-			WHEN pageviews_visited.home = 1 THEN 'home'
-			WHEN pageviews_visited.lander_1 = 1 THEN 'lander_1'
-            WHEN pageviews_visited.lander_2 = 1 THEN 'lander_2'
-            WHEN pageviews_visited.lander_3 = 1 THEN 'lander_3'
-            WHEN pageviews_visited.lander_4 = 1 THEN 'lander_4'
-            WHEN pageviews_visited.lander_5 = 1 THEN 'lander_5'
+	WHEN pageviews_visited.home = 1 THEN 'home'
+	WHEN pageviews_visited.lander_1 = 1 THEN 'lander_1'
+        WHEN pageviews_visited.lander_2 = 1 THEN 'lander_2'
+        WHEN pageviews_visited.lander_3 = 1 THEN 'lander_3'
+        WHEN pageviews_visited.lander_4 = 1 THEN 'lander_4'
+        WHEN pageviews_visited.lander_5 = 1 THEN 'lander_5'
         ELSE 'something_is_wrong'
         END AS segment,
         COUNT(DISTINCT website_session_id) AS session,
@@ -152,7 +152,7 @@ GROUP BY segment;
 -- 4. Analyzing the session-to-order conversion rate to evaluate website performance improvements over the first 8 months.
 
 SELECT 
-		MIN(DATE(t1.created_at))AS month_start_date,
+	MIN(DATE(t1.created_at))AS month_start_date,
         COUNT(t1.website_session_id) AS total_session,
         SUM( CASE WHEN order_id IS NOT NULL THEN 1 ELSE 0 END) AS total_order,
         SUM( CASE WHEN order_id IS NOT NULL THEN 1 ELSE 0 END)/ COUNT(t1.website_session_id)*100 AS session_to_order_rate
@@ -175,7 +175,7 @@ GROUP BY MONTH(t1.created_at);
 -- generates more orders, revenue, and revenue per billing session.
 
 SELECT 
-		pageview_url,
+	pageview_url,
         COUNT(t1.website_session_id) AS total_session,
         SUM(orders.price_usd) AS total_revenue,
         SUM(orders.price_usd)/COUNT(t1.website_session_id) AS revenue_per_billing_session
@@ -184,7 +184,7 @@ FROM website_pageviews AS t1
 		LEFT JOIN orders
 			ON orders.website_session_id = t1.website_session_id
 WHERE t1.created_at BETWEEN '2012-09-10' AND '2012-11-10'
-AND pageview_url LIKE ('%billing%')
+	AND pageview_url LIKE ('%billing%')
 GROUP BY 1;
 
 
@@ -200,7 +200,7 @@ GROUP BY 1;
 
 CREATE TEMPORARY TABLE pageviews
 SELECT 
-		website_session_id,
+	website_session_id,
         MAX(billing) AS billing,
         MAX(billing_2) AS billing_2,
         MAX(orders) AS orders
@@ -215,7 +215,7 @@ FROM website_sessions
 		LEFT JOIN website_pageviews
 			On website_pageviews.website_session_id = website_sessions.website_session_id
 WHERE website_sessions.created_at BETWEEN '2012-09-10' AND '2012-11-10'
-AND pageview_url IN ('/billing','/billing-2','/thank-you-for-your-order')) AS page_visited
+	AND pageview_url IN ('/billing','/billing-2','/thank-you-for-your-order')) AS page_visited
 GROUP BY 1;
 
 SELECT 
