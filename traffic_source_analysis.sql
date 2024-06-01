@@ -13,7 +13,7 @@ WITH cte AS (
 				LEFT JOIN orders
 					ON orders.website_session_id = t1.website_session_id)
 SELECT 
-		yr,
+	yr,
         qtr,
         COUNT(CASE WHEN utm_source = 'gsearch' AND utm_campaign = 'nonbrand' AND order_id IS NOT NULL THEN order_id ELSE NULL END)/
         COUNT(DISTINCT CASE WHEN utm_source = 'gsearch' AND utm_campaign = 'nonbrand' THEN website_session_id ELSE NULL END)AS 'gsearch_nonbrand_CVR',
@@ -41,7 +41,7 @@ GROUP BY 1,2;
 -- segmented by device type, for the Google Search non-brand campaign to evaluate growth.
  
 SELECT 
-		year_created_in,
+	year_created_in,
         month_created_in,
         MAX(desktop_session) AS desktop_session,
         MAX(desktop_order)AS desktop_order,
@@ -51,9 +51,9 @@ SELECT
         MAX(mobile_order)/MAX(mobile_session) AS mobile_order_rate
         
 FROM (SELECT 
-		YEAR(t1.created_at) AS year_created_in,
+	YEAR(t1.created_at) AS year_created_in,
         MONTH(t1.created_at) AS month_created_in,
-		SUM(CASE WHEN t1.device_type = 'desktop' THEN 1 ELSE 0 END) AS desktop_session,
+	SUM(CASE WHEN t1.device_type = 'desktop' THEN 1 ELSE 0 END) AS desktop_session,
         SUM(CASE WHEN t1.device_type = 'desktop' AND order_id IS NOT NULL THEN 1 ELSE 0 END) as desktop_order,
         SUM(CASE WHEN t1.device_type = 'mobile' THEN 1 ELSE 0 END) AS mobile_session,
         SUM(CASE WHEN t1.device_type = 'mobile' AND order_id IS NOT NULL THEN 1 ELSE 0 END) AS mobile_order
@@ -77,7 +77,7 @@ GROUP BY 1,2;
 -- originating from the Google Search traffic source to demonstrate the website's growth.
 
 SELECT 
-		MIN(DATE(website_sessions.created_at)) AS month_start_date,
+	MIN(DATE(website_sessions.created_at)) AS month_start_date,
         COUNT(website_sessions.website_session_id) AS total_session,
         COUNT(orders.order_id) AS total_order,
         COUNT(orders.order_id)/COUNT(website_sessions.website_session_id)*100 AS order_rate
@@ -85,7 +85,7 @@ FROM website_sessions
 		LEFT JOIN orders
 			ON website_sessions.website_session_id = orders.website_session_id
 WHERE website_sessions.created_at < '2012-11-27' 
-		AND utm_source = 'gsearch' 
+	AND utm_source = 'gsearch' 
 GROUP BY MONTH(website_sessions.created_at);
 
 
@@ -101,7 +101,7 @@ GROUP BY MONTH(website_sessions.created_at);
 -- differentiating between brand and non-brand campaigns.
   
 SELECT 
-		MIN(DATE(t1.created_at)) AS month_start_date,
+	MIN(DATE(t1.created_at)) AS month_start_date,
         SUM(CASE WHEN utm_campaign = 'nonbrand' AND t1.website_session_id IS NOT NULL THEN 1 ELSE 0 END) AS nonbrand_session,
         SUM(CASE WHEN utm_campaign = 'nonbrand' AND order_id IS NOT NULL THEN 1 ELSE 0 END) AS non_brand_order,
         SUM(CASE WHEN utm_campaign = 'brand' AND t1.website_session_id IS NOT NULL THEN 1 ELSE 0 END) AS brand_session,
@@ -110,7 +110,7 @@ FROM website_sessions AS t1
 		LEFT JOIN orders
 			ON orders.website_session_id = t1.website_session_id
 WHERE t1.created_at < '2012-11-27'
-		AND utm_source = 'gsearch'
+	AND utm_source = 'gsearch'
 GROUP BY MONTH(t1.created_at);
 
 
@@ -125,7 +125,7 @@ GROUP BY MONTH(t1.created_at);
 -- 5. Extract monthly trends for each traffic source to evaluate their performance.
 
 SELECT 
-		YEAR(created_at) AS year_created_in,
+	YEAR(created_at) AS year_created_in,
         MONTH(created_at) AS month_created_in,
         SUM(CASE WHEN utm_source = 'gsearch' THEN 1 ELSE 0 END) AS gsearch_session,
         SUM(CASE WHEN utm_source = 'bsearch' THEN 1 ELSE 0 END) AS bsearch_session,
@@ -148,7 +148,7 @@ GROUP BY 1,2;
 
 SELECT
         CASE 
-			WHEN utm_source IS NULL AND utm_campaign IS NULL AND http_referer IS NOT NULL THEN 'organic_search'
+		WHEN utm_source IS NULL AND utm_campaign IS NULL AND http_referer IS NOT NULL THEN 'organic_search'
             WHEN utm_source IS NULL AND utm_campaign IS NULL AND http_referer IS NULL THEN 'direct_type_in'
             WHEN utm_campaign = 'nonbrand' THEN 'paid_nonbrand'
             WHEN utm_campaign = 'brand' THEN 'paid_brand'
